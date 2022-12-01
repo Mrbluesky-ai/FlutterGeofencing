@@ -298,7 +298,6 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
               args,
               result)
       "GeofencingPlugin.getRegisteredGeofenceIds" -> getRegisteredGeofenceIds(mContext!!, result)
-      else -> result.notImplemented()
       "GeofencingPlugin.getRegisteredGeofenceRegions" -> getRegisteredGeofences(mContext!!, result)
       else -> result.notImplemented()
     }
