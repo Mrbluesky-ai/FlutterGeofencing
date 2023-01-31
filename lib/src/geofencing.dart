@@ -108,6 +108,14 @@ class GeofencingManager {
         <dynamic>[callback.toRawHandle()]);
   }
 
+  Future<void> getpermission() async {
+    await _channel.invokeMethod('GeofencingPlugin.permission');
+  }
+
+  Future<bool> haspermission() async {
+    return await _channel.invokeMethod('GeofencingPlugin.haspermission');
+  }
+
   /// Promote the geofencing service to a foreground service.
   ///
   /// Will throw an exception if called anywhere except for a geofencing
@@ -174,4 +182,5 @@ class GeofencingManager {
   /// geofence region.
   static Future<bool> removeGeofenceById(String id) async => await _channel
       .invokeMethod('GeofencingPlugin.removeGeofence', <dynamic>[id]);
+
 }
