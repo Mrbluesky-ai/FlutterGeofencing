@@ -298,15 +298,18 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
         result.success(true)
       }
       "GeofencingPlugin.haspermission" -> {
+        print("ja hallotjes, we aan hier ff kijken of we wel de permissies hebben")
+        var haspermisions = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-
-          result.success(mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && mActivity?.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
+          haspermisions = (mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) && (mActivity?.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
+          print("we ziten in een best nieuwe versie van android, hebben we de permissies? $haspermisions")
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-          result.success(mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+          haspermisions = mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+          print("we ziten in een oudere versie van android, maarrrr.... hebben we de permissies? $haspermisions")
         }
 
 //        initializeService(mContext!!, args)
-
+        result.success(haspermisions)
       }
       "GeofencingPlugin.registerGeofence" -> registerGeofence(mContext!!,
               mGeofencingClient!!,
