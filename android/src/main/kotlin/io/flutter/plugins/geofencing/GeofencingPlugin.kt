@@ -300,9 +300,9 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
       "GeofencingPlugin.haspermission" -> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-          result.success(mActivity?.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && mActivity?.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
+          result.success(mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && mActivity?.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-          result.success(mActivity?.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+          result.success(mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         }
 
 //        initializeService(mContext!!, args)
