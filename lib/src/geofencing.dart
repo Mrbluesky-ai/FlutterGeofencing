@@ -102,10 +102,12 @@ class GeofencingManager {
 
   /// Initialize the plugin and request relevant permissions from the user.
   static Future<void> initialize() async {
-    final CallbackHandle callback =
-        PluginUtilities.getCallbackHandle(callbackDispatcher);
-    await _channel.invokeMethod('GeofencingPlugin.initializeService',
-        <dynamic>[callback.toRawHandle()]);
+    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
+      final CallbackHandle callback =
+      PluginUtilities.getCallbackHandle(callbackDispatcher);
+      await _channel.invokeMethod('GeofencingPlugin.initializeService',
+          <dynamic>[callback.toRawHandle()]);
+    }
   }
 
   Future<void> getpermission() async {
