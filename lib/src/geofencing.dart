@@ -161,9 +161,11 @@ class GeofencingManager {
   }
 
   /// get all geofence identifiers
-  static Future<List<String>> getRegisteredGeofenceIds() async =>
-      List<String>.from(await _channel
-          .invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
+  static Future<List<String>> getRegisteredGeofenceIds() async {
+  if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
+    List<String>.from(await _channel.invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
+   }
+  }
 
   /// get all geofence regions and their properties
   /// returns a [Map] with the following keys
@@ -174,17 +176,28 @@ class GeofencingManager {
   ///
   /// if there are no geofences registered it returns []
   static Future<List<Map<dynamic, dynamic>>>
-  getRegisteredGeofenceRegions() async =>
+  getRegisteredGeofenceRegions() async {
+    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
       List<Map<dynamic, dynamic>>.from(await _channel
           .invokeMethod('GeofencingPlugin.getRegisteredGeofenceRegions'));
+    }
+
+  }
 
   /// Stop receiving geofence events for a given [GeofenceRegion].
-  static Future<bool> removeGeofence(GeofenceRegion region) async =>
+  static Future<bool> removeGeofence(GeofenceRegion region) async {
+    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
       (region == null) ? false : await removeGeofenceById(region.id);
+    }
+  }
 
   /// Stop receiving geofence events for an identifier associated with a
   /// geofence region.
-  static Future<bool> removeGeofenceById(String id) async => await _channel
-      .invokeMethod('GeofencingPlugin.removeGeofence', <dynamic>[id]);
+  static Future<bool> removeGeofenceById(String id) async {
+    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
+      await _channel.invokeMethod(
+          'GeofencingPlugin.removeGeofence', <dynamic>[id]);
+    }
+  }
 
 }
