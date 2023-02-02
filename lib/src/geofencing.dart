@@ -111,11 +111,11 @@ class GeofencingManager {
     }
   }
 
-  Future<bool> getpermission() async {
+  static Future<bool> getpermission() async {
     return await _channel.invokeMethod('GeofencingPlugin.permission');
   }
 
-  Future<bool> haspermission() async {
+  static Future<bool> haspermission() async {
     return await _channel.invokeMethod('GeofencingPlugin.haspermission');
   }
 
