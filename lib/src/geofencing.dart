@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:geofencing/src/callback_dispatcher.dart';
 import 'package:geofencing/src/location.dart';
 import 'package:geofencing/src/platform_settings.dart';
+import 'package:geolocator/geolocator.dart';
 
 const int _kEnterEvent = 1;
 const int _kExitEvent = 2;
@@ -112,12 +113,14 @@ class GeofencingManager {
   }
 
   static Future<bool> getpermission() async {
-    await _channel.invokeMethod('GeofencingPlugin.permission');
-    return await _channel.invokeMethod('GeofencingPlugin.haspermission');
+    // await _channel.invokeMethod('GeofencingPlugin.permission');
+    var answer = await Geolocator.requestPermission();
+    return answer == LocationPermission.always;
   }
 
   static Future<bool> haspermission() async {
-    return await _channel.invokeMethod('GeofencingPlugin.haspermission');
+    return await Geolocator.checkPermission() == LocationPermission.always;
+      //await _channel.invokeMethod('GeofencingPlugin.haspermission');
   }
 
   /// Promote the geofencing service to a foreground service.

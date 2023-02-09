@@ -305,29 +305,29 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
         result.success(true)
       }
       "GeofencingPlugin.permission" -> {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          mActivity?.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), 12312)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-          mActivity?.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 12312)
-        }
-
-
-        val lijstje = IntArray(0)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          mActivity?.onRequestPermissionsResult(12312, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), lijstje)
-          if (lijstje.isNotEmpty() && lijstje[0] == PackageManager.PERMISSION_GRANTED && lijstje[1] == PackageManager.PERMISSION_GRANTED){
-            result.success(true)
-          } else {
-            result.success(false);
-          }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-          mActivity?.onRequestPermissionsResult(12312, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), lijstje)
-          if (lijstje.isNotEmpty() && lijstje[0] == PackageManager.PERMISSION_GRANTED){
-            result.success(true)
-          } else {
-            result.success(false);
-          }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//          mActivity?.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), 12312)
+//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//          mActivity?.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 12312)
+//        }
+//
+//
+//        val lijstje = IntArray(0)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//          mActivity?.onRequestPermissionsResult(12312, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), lijstje)
+//          if (lijstje.isNotEmpty() && lijstje[0] == PackageManager.PERMISSION_GRANTED && lijstje[1] == PackageManager.PERMISSION_GRANTED){
+//            result.success(true)
+//          } else {
+//            result.success(false);
+//          }
+//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//          mActivity?.onRequestPermissionsResult(12312, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), lijstje)
+//          if (lijstje.isNotEmpty() && lijstje[0] == PackageManager.PERMISSION_GRANTED){
+//            result.success(true)
+//          } else {
+//            result.success(false);
+//          }
+//        }
 //        result.success(false);
 //        initializeService(mContext!!, args)
 //        result.success(haspermission(mActivity))
