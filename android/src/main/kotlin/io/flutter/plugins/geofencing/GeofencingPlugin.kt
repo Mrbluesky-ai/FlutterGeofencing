@@ -291,6 +291,7 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
     mActivity = binding.getActivity()
   }
 
+
   override fun onMethodCall(call: MethodCall, result: Result) {
     val args = call.arguments<ArrayList<*>>()
     when(call.method) {
@@ -320,7 +321,7 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
             result.success(false);
           }
         }
-        result.success(false);
+//        result.success(false);
 //        initializeService(mContext!!, args)
 //        result.success(haspermission(mActivity))
       }
