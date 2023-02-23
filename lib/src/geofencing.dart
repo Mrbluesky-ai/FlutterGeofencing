@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:geofencing/src/callback_dispatcher.dart';
 import 'package:geofencing/src/location.dart';
 import 'package:geofencing/src/platform_settings.dart';
+import 'package:geolocator/geolocator.dart';
 
 const int _kEnterEvent = 1;
 const int _kExitEvent = 2;
@@ -105,12 +106,26 @@ class GeofencingManager {
 
   /// Initialize the plugin and request relevant permissions from the user.
   static Future<void> initialize() async {
-    final CallbackHandle? callback =
-        PluginUtilities.getCallbackHandle(callbackDispatcher);
-    if (callback != null) {
-      await _channel.invokeMethod('GeofencingPlugin.initializeService',
-          <dynamic>[callback.toRawHandle()]);
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
+      final CallbackHandle? callback =
+      PluginUtilities.getCallbackHandle(callbackDispatcher);
+      if (callback != null) {
+        await _channel.invokeMethod('GeofencingPlugin.initializeService',
+            <dynamic>[callback.toRawHandle()]);
+      }
     }
+  }
+
+  static Future<bool> getpermission() async {
+    // await _channel.invokeMethod('GeofencingPlugin.permission');
+    Geolocator.openAppSettings();
+    var answer = await Geolocator.requestPermission();
+    return answer == LocationPermission.always;
+  }
+
+  static Future<bool> haspermission() async {
+    return await Geolocator.checkPermission() == LocationPermission.always;
+      //await _channel.invokeMethod('GeofencingPlugin.haspermission');
   }
 
   /// Promote the geofencing service to a foreground service.
@@ -141,29 +156,58 @@ class GeofencingManager {
       GeofenceRegion region,
       void Function(List<String> id, Location location, GeofenceEvent event)
           callback) async {
-    if (Platform.isIOS &&
-        region.triggers.contains(GeofenceEvent.dwell) &&
-        (region.triggers.length == 1)) {
-      throw UnsupportedError("iOS does not support 'GeofenceEvent.dwell'");
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
+      if (Platform.isIOS &&
+          region.triggers.contains(GeofenceEvent.dwell) &&
+          (region.triggers.length == 1)) {
+        throw UnsupportedError("iOS does not support 'GeofenceEvent.dwell'");
+      }
+      final List<dynamic> args = <dynamic>[
+        PluginUtilities.getCallbackHandle(callback)!.toRawHandle()
+      ];
+      args.addAll(region._toArgs());
+      await _channel.invokeMethod('GeofencingPlugin.registerGeofence', args);
     }
-    final List<dynamic> args = <dynamic>[
-      PluginUtilities.getCallbackHandle(callback)!.toRawHandle()
-    ];
-    args.addAll(region._toArgs());
-    await _channel.invokeMethod('GeofencingPlugin.registerGeofence', args);
   }
 
   /// get all geofence identifiers
-  static Future<List<String>> getRegisteredGeofenceIds() async =>
-      List<String>.from(await _channel
-          .invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
+  static Future<List<String>> getRegisteredGeofenceIds() async {
+  if(await Geolocator.checkPermission() == LocationPermission.always) {
+    List<String>.from(await _channel.invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
+   }
+  }
+
+  /// get all geofence regions and their properties
+  /// returns a [Map] with the following keys
+  /// [id] the identifier
+  /// [lat] latitude
+  /// [long] longitude
+  /// [radius] radius
+  ///
+  /// if there are no geofences registered it returns []
+  static Future<List<Map<dynamic, dynamic>>>
+  getRegisteredGeofenceRegions() async {
+    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
+      List<Map<dynamic, dynamic>>.from(await _channel
+          .invokeMethod('GeofencingPlugin.getRegisteredGeofenceRegions'));
+    }
+
+  }
 
   /// Stop receiving geofence events for a given [GeofenceRegion].
-  static Future<bool> removeGeofence(GeofenceRegion region) async =>
+  static Future<bool> removeGeofence(GeofenceRegion region) async {
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
       (region == null) ? false : await removeGeofenceById(region.id);
+    }
+  }
 
   /// Stop receiving geofence events for an identifier associated with a
   /// geofence region.
-  static Future<bool> removeGeofenceById(String id) async => await _channel
-      .invokeMethod('GeofencingPlugin.removeGeofence', <dynamic>[id]);
+  static Future<bool> removeGeofenceById(String id) async {
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
+      await _channel.invokeMethod(
+          'GeofencingPlugin.removeGeofence', <dynamic>[id]);
+    }
+  }
+
 }
