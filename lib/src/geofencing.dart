@@ -103,8 +103,7 @@ class GeofencingManager {
 
   /// Initialize the plugin and request relevant permissions from the user.
   static Future<void> initialize() async {
-    bool permissionisgivin = await _channel.invokeMethod('GeofencingPlugin.haspermission');
-    if(permissionisgivin) {
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
       final CallbackHandle callback =
       PluginUtilities.getCallbackHandle(callbackDispatcher);
       await _channel.invokeMethod('GeofencingPlugin.initializeService',
