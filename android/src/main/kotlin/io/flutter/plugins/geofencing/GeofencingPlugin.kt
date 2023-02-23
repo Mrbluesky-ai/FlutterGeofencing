@@ -281,6 +281,7 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
     when(call.method) {
       "GeofencingPlugin.initializeService" -> {
         initializeService(mContext!!, args)
+
         result.success(true)
       }
       "GeofencingPlugin.registerGeofence" -> registerGeofence(mContext!!,
