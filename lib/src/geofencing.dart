@@ -114,6 +114,7 @@ class GeofencingManager {
 
   static Future<bool> getpermission() async {
     // await _channel.invokeMethod('GeofencingPlugin.permission');
+    Geolocator.openAppSettings();
     var answer = await Geolocator.requestPermission();
     return answer == LocationPermission.always;
   }
@@ -167,7 +168,7 @@ class GeofencingManager {
 
   /// get all geofence identifiers
   static Future<List<String>> getRegisteredGeofenceIds() async {
-  if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
+  if(await Geolocator.checkPermission() == LocationPermission.always) {
     List<String>.from(await _channel.invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
    }
   }
