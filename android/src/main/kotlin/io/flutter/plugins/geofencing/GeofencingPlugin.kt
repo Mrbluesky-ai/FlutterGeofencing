@@ -250,14 +250,14 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
     }
 
     private fun haspermission(mActivity: Activity?): Boolean {
-      print("ja hallotjes, we aan hier ff kijken of we wel de permissies hebben")
+      Log.d(TAG,"ja hallotjes, we aan hier ff kijken of we wel de permissies hebben")
       var haspermisions = false
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         haspermisions = (mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) && (mActivity?.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        print("we ziten in een best nieuwe versie van android, hebben we de permissies? $haspermisions")
+        Log.d(TAG,"we ziten in een best nieuwe versie van android, hebben we de permissies? $haspermisions")
       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         haspermisions = mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        print("we ziten in een oudere versie van android, maarrrr.... hebben we de permissies? $haspermisions")
+        Log.d(TAG,"we ziten in een oudere versie van android, maarrrr.... hebben we de permissies? $haspermisions")
       }
       return haspermisions;
     }
