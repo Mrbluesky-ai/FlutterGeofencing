@@ -173,8 +173,10 @@ class GeofencingManager {
   /// get all geofence identifiers
   static Future<List<String>> getRegisteredGeofenceIds() async {
   if(await Geolocator.checkPermission() == LocationPermission.always) {
-    List<String>.from(await _channel.invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
-   }
+     return List<String>.from(await _channel.invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
+   } else {
+    return [];
+  }
   }
 
   /// get all geofence regions and their properties
@@ -188,8 +190,10 @@ class GeofencingManager {
   static Future<List<Map<dynamic, dynamic>>>
   getRegisteredGeofenceRegions() async {
     if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
-      List<Map<dynamic, dynamic>>.from(await _channel
+      return List<Map<dynamic, dynamic>>.from(await _channel
           .invokeMethod('GeofencingPlugin.getRegisteredGeofenceRegions'));
+    } else {
+      return [];
     }
 
   }
@@ -197,7 +201,9 @@ class GeofencingManager {
   /// Stop receiving geofence events for a given [GeofenceRegion].
   static Future<bool> removeGeofence(GeofenceRegion region) async {
     if(await Geolocator.checkPermission() == LocationPermission.always) {
-      (region == null) ? false : await removeGeofenceById(region.id);
+      return (region == null) ? false : await removeGeofenceById(region.id);
+    } else {
+      return false;
     }
   }
 
@@ -205,8 +211,10 @@ class GeofencingManager {
   /// geofence region.
   static Future<bool> removeGeofenceById(String id) async {
     if(await Geolocator.checkPermission() == LocationPermission.always) {
-      await _channel.invokeMethod(
+      return await _channel.invokeMethod(
           'GeofencingPlugin.removeGeofence', <dynamic>[id]);
+    } else {
+      return false;
     }
   }
 
