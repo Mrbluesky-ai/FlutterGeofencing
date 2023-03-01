@@ -73,10 +73,13 @@ class GeofenceRegion {
   final AndroidGeofencingSettings androidSettings;
 
   GeofenceRegion(
-      this.id, double latitude, double longitude, this.radius, this.triggers,
-      {AndroidGeofencingSettings androidSettings})
-      : location = Location(latitude, longitude),
-        androidSettings = (androidSettings ?? AndroidGeofencingSettings());
+    this.id,
+    double latitude,
+    double longitude,
+    this.radius,
+    this.triggers,
+    this.androidSettings,
+  ) : location = Location(latitude, longitude);
 
   List<dynamic> _toArgs() {
     final int triggerMask = triggers.fold(
@@ -104,10 +107,12 @@ class GeofencingManager {
   /// Initialize the plugin and request relevant permissions from the user.
   static Future<void> initialize() async {
     if(await Geolocator.checkPermission() == LocationPermission.always) {
-      final CallbackHandle callback =
+      final CallbackHandle? callback =
       PluginUtilities.getCallbackHandle(callbackDispatcher);
-      await _channel.invokeMethod('GeofencingPlugin.initializeService',
-          <dynamic>[callback.toRawHandle()]);
+      if (callback != null) {
+        await _channel.invokeMethod('GeofencingPlugin.initializeService',
+            <dynamic>[callback.toRawHandle()]);
+      }
     }
   }
 
@@ -151,14 +156,14 @@ class GeofencingManager {
       GeofenceRegion region,
       void Function(List<String> id, Location location, GeofenceEvent event)
           callback) async {
-    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
       if (Platform.isIOS &&
           region.triggers.contains(GeofenceEvent.dwell) &&
           (region.triggers.length == 1)) {
         throw UnsupportedError("iOS does not support 'GeofenceEvent.dwell'");
       }
       final List<dynamic> args = <dynamic>[
-        PluginUtilities.getCallbackHandle(callback).toRawHandle()
+        PluginUtilities.getCallbackHandle(callback)!.toRawHandle()
       ];
       args.addAll(region._toArgs());
       await _channel.invokeMethod('GeofencingPlugin.registerGeofence', args);
@@ -168,8 +173,10 @@ class GeofencingManager {
   /// get all geofence identifiers
   static Future<List<String>> getRegisteredGeofenceIds() async {
   if(await Geolocator.checkPermission() == LocationPermission.always) {
-    List<String>.from(await _channel.invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
-   }
+     return List<String>.from(await _channel.invokeMethod('GeofencingPlugin.getRegisteredGeofenceIds'));
+   } else {
+    return [];
+  }
   }
 
   /// get all geofence regions and their properties
@@ -183,25 +190,31 @@ class GeofencingManager {
   static Future<List<Map<dynamic, dynamic>>>
   getRegisteredGeofenceRegions() async {
     if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
-      List<Map<dynamic, dynamic>>.from(await _channel
+      return List<Map<dynamic, dynamic>>.from(await _channel
           .invokeMethod('GeofencingPlugin.getRegisteredGeofenceRegions'));
+    } else {
+      return [];
     }
 
   }
 
   /// Stop receiving geofence events for a given [GeofenceRegion].
   static Future<bool> removeGeofence(GeofenceRegion region) async {
-    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
-      (region == null) ? false : await removeGeofenceById(region.id);
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
+      return (region == null) ? false : await removeGeofenceById(region.id);
+    } else {
+      return false;
     }
   }
 
   /// Stop receiving geofence events for an identifier associated with a
   /// geofence region.
   static Future<bool> removeGeofenceById(String id) async {
-    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
-      await _channel.invokeMethod(
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
+      return await _channel.invokeMethod(
           'GeofencingPlugin.removeGeofence', <dynamic>[id]);
+    } else {
+      return false;
     }
   }
 

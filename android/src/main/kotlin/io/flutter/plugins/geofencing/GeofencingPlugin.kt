@@ -1,6 +1,5 @@
 package io.flutter.plugins.geofencing
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
@@ -152,7 +151,6 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
       }.build()
     }
 
-    @SuppressLint("WrongConstant")
     @JvmStatic
     private fun getGeofencePendingIndent(context: Context, callbackHandle: Long): PendingIntent {
       val intent = Intent(context, GeofencingBroadcastReceiver::class.java)
@@ -242,19 +240,6 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
     private fun getPersistentGeofenceKey(id: String): String {
       return "persistent_geofence/" + id
     }
-
-    private fun haspermission(mActivity: Activity?): Boolean {
-      Log.d(TAG,"ja hallotjes, we aan hier ff kijken of we wel de permissies hebben")
-      var haspermisions = false
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        haspermisions = (mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) && (mActivity?.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        Log.d(TAG,"we ziten in een best nieuwe versie van android, hebben we de permissies? $haspermisions")
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        haspermisions = mActivity?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        Log.d(TAG,"we ziten in een oudere versie van android, maarrrr.... hebben we de permissies? $haspermisions")
-      }
-      return haspermisions;
-    }
   }
 
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -285,52 +270,13 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
     mActivity = binding.getActivity()
   }
 
-
   override fun onMethodCall(call: MethodCall, result: Result) {
     val args = call.arguments<ArrayList<*>>()
     when(call.method) {
       "GeofencingPlugin.initializeService" -> {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//          mActivity?.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), 12312)
-//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//          mActivity?.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 12312)
-//        }
         initializeService(mContext!!, args)
+
         result.success(true)
-      }
-      "GeofencingPlugin.permission" -> {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//          mActivity?.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), 12312)
-//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//          mActivity?.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 12312)
-//        }
-//
-//
-//        val lijstje = IntArray(0)
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//          mActivity?.onRequestPermissionsResult(12312, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), lijstje)
-//          if (lijstje.isNotEmpty() && lijstje[0] == PackageManager.PERMISSION_GRANTED && lijstje[1] == PackageManager.PERMISSION_GRANTED){
-//            result.success(true)
-//          } else {
-//            result.success(false);
-//          }
-//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//          mActivity?.onRequestPermissionsResult(12312, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), lijstje)
-//          if (lijstje.isNotEmpty() && lijstje[0] == PackageManager.PERMISSION_GRANTED){
-//            result.success(true)
-//          } else {
-//            result.success(false);
-//          }
-//        }
-//        result.success(false);
-//        initializeService(mContext!!, args)
-//        result.success(haspermission(mActivity))
-      }
-      "GeofencingPlugin.haspermission" -> {
-
-
-//        initializeService(mContext!!, args)
-        result.success(haspermission(mActivity))
       }
       "GeofencingPlugin.registerGeofence" -> registerGeofence(mContext!!,
               args,
