@@ -72,8 +72,9 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
                                  args: ArrayList<*>?,
                                  result: Result?,
                                  cache: Boolean) {
-      Log.i(TAG, "controle ik ben op #2")
+      Log.i(TAG, "controle ik ben op #1")
       try {
+        Log.i(TAG, "controle ik ben op #2")
       val geofencingClient = LocationServices.getGeofencingClient(context)
       val callbackHandle = args!![0] as Long
       val id = args[1] as String
