@@ -85,6 +85,7 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
       val expirationDuration = (args[7] as Int).toLong()
       val loiteringDelay = args[8] as Int
       val notificationResponsiveness = args[9] as Int
+        Log.i(TAG, "controle ik ben op #3")
       val geofence = Geofence.Builder()
               .setRequestId(id)
               .setCircularRegion(lat, long, radius)
@@ -93,6 +94,7 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
               .setNotificationResponsiveness(notificationResponsiveness)
               .setExpirationDuration(expirationDuration)
               .build()
+        Log.i(TAG, "controle ik ben op #4")
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
               (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                       == PackageManager.PERMISSION_DENIED)) {
@@ -100,9 +102,11 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
         Log.w(TAG, msg)
         result?.error(msg, null, null)
       }
+        Log.i(TAG, "controle ik ben op #5")
       geofencingClient.addGeofences(getGeofencingRequest(geofence, initialTriggers),
               getGeofencePendingIndent(context, callbackHandle))?.run {
         addOnSuccessListener {
+          Log.i(TAG, "controle ik ben op #6")
           Log.i(TAG, "Successfully added geofence")
           if (cache) {
             addGeofenceToCache(context, id, args)
@@ -158,10 +162,11 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
       }.build()
     }
 
+    @SuppressLint("WrongConstant")
     @JvmStatic
     private fun getGeofencePendingIndent(context: Context, callbackHandle: Long): PendingIntent {
       val intent = Intent(context, GeofencingBroadcastReceiver::class.java)
-              .putExtra(CALLBACK_HANDLE_KEY, callbackHandle)
+        .putExtra(CALLBACK_HANDLE_KEY, callbackHandle)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
       } else {
