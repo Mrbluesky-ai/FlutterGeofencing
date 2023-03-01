@@ -72,6 +72,7 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
                                  args: ArrayList<*>?,
                                  result: Result?,
                                  cache: Boolean) {
+      Log.i(TAG, "controle ik ben op #2")
       try {
       val geofencingClient = LocationServices.getGeofencingClient(context)
       val callbackHandle = args!![0] as Long
@@ -284,10 +285,12 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
 
         result.success(true)
       }
-      "GeofencingPlugin.registerGeofence" -> registerGeofence(mContext!!,
+      "GeofencingPlugin.registerGeofence" -> {registerGeofence(mContext!!,
               args,
               result,
               true)
+        Log.i(TAG, "controleren op #1")
+      }
       "GeofencingPlugin.removeGeofence" -> removeGeofence(mContext!!,
               mGeofencingClient!!,
               args,
