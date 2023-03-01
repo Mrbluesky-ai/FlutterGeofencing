@@ -9,6 +9,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.NotificationCompat
@@ -39,9 +40,13 @@ class IsolateHolderService : Service() {
     override fun onCreate() {
         super.onCreate()
         val CHANNEL_ID = "geofencing_plugin_channel"
-        val channel = NotificationChannel(CHANNEL_ID,
-                "Flutter Geofencing Plugin",
-                NotificationManager.IMPORTANCE_LOW)
+        val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel(CHANNEL_ID,
+                    "Flutter Geofencing Plugin",
+                    NotificationManager.IMPORTANCE_LOW)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
         val imageId = getResources().getIdentifier("ic_launcher", "mipmap", getPackageName())
 
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
