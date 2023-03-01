@@ -1,9 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 package io.flutter.plugins.geofencing
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -66,18 +61,17 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
           for (i in 0 until gfArgs.length()) {
             list.add(gfArgs.get(i) as Object)
           }
-          val geoClient = LocationServices.getGeofencingClient(context)
-          registerGeofence(context, geoClient, list, null, false)
+          registerGeofence(context, list, null, false)
         }
       }
     }
 
     @JvmStatic
     private fun registerGeofence(context: Context,
-                                 geofencingClient: GeofencingClient,
                                  args: ArrayList<*>?,
                                  result: Result?,
                                  cache: Boolean) {
+      var geofencingClient = LocationServices.getGeofencingClient(context)
       val callbackHandle = args!![0] as Long
       val id = args[1] as String
       val lat = args[2] as Double
@@ -339,7 +333,6 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
         result.success(haspermission(mActivity))
       }
       "GeofencingPlugin.registerGeofence" -> registerGeofence(mContext!!,
-              mGeofencingClient!!,
               args,
               result,
               true)
