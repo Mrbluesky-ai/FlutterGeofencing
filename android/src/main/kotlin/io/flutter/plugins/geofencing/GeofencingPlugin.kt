@@ -1,5 +1,6 @@
 package io.flutter.plugins.geofencing
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
@@ -65,12 +66,14 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
       }
     }
 
+    @SuppressLint("VisibleForTests")
     @JvmStatic
     private fun registerGeofence(context: Context,
                                  args: ArrayList<*>?,
                                  result: Result?,
                                  cache: Boolean) {
-      var geofencingClient = LocationServices.getGeofencingClient(context)
+      try {
+      val geofencingClient = LocationServices.getGeofencingClient(context)
       val callbackHandle = args!![0] as Long
       val id = args[1] as String
       val lat = args[2] as Double
@@ -109,6 +112,9 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
           Log.e(TAG, "Failed to add geofence: $it")
           result?.error(it.toString(), null, null)
         }
+      }
+      } catch (e: Exception) {
+        Log.e(TAG, "Failed to add geofence: ${e}")
       }
     }
 
