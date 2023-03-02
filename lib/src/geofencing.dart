@@ -189,7 +189,7 @@ class GeofencingManager {
   /// if there are no geofences registered it returns []
   static Future<List<Map<dynamic, dynamic>>>
   getRegisteredGeofenceRegions() async {
-    if(await _channel.invokeMethod('GeofencingPlugin.haspermission')) {
+    if(await Geolocator.checkPermission() == LocationPermission.always) {
       return List<Map<dynamic, dynamic>>.from(await _channel
           .invokeMethod('GeofencingPlugin.getRegisteredGeofenceRegions'));
     } else {
