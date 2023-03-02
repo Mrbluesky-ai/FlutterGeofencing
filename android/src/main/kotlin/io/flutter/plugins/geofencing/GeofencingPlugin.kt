@@ -77,7 +77,7 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
                                  cache: Boolean) {
       lateinit var geofencingClient: GeofencingClient
       try {
-        geofencingClient = LocationServices.getGeofencingClient(context)
+
       val callbackHandle = args!![0] as Long
       val id = args[1] as String
       val lat = args[2] as Double
@@ -104,6 +104,7 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
         result?.error(msg, null, null)
       }
         Log.i(TAG, "controle ik ben op #5")
+        geofencingClient = LocationServices.getGeofencingClient(context)
       geofencingClient.addGeofences(getGeofencingRequest(geofence, initialTriggers),
               getGeofencePendingIndent(context, callbackHandle))?.run {
         addOnSuccessListener {
