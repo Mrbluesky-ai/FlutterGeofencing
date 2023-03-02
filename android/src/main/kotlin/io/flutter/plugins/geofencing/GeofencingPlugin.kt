@@ -131,12 +131,12 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
         var p = context.getSharedPreferences(SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
         var obj = JSONArray(args)
         var persistentGeofences = p.getStringSet(PERSISTENT_GEOFENCES_IDS, null)
-        if (persistentGeofences == null) {
-          persistentGeofences = HashSet<String>()
+        persistentGeofences = if (persistentGeofences == null) {
+          HashSet<String>()
         } else {
-          persistentGeofences = HashSet<String>(persistentGeofences)
+          HashSet<String>(persistentGeofences)
         }
-        persistentGeofences.add(id)
+        persistentGeofences?.add(id)
         context.getSharedPreferences(SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
                 .edit()
                 .putStringSet(PERSISTENT_GEOFENCES_IDS, persistentGeofences)
