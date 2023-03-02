@@ -131,7 +131,10 @@ class GeofencingService : MethodCallHandler, JobIntentService() {
     override fun onHandleWork(intent: Intent) {
         val callbackHandle = intent.getLongExtra(GeofencingPlugin.CALLBACK_HANDLE_KEY, 0)
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
-        if (geofencingEvent.hasError()) {
+        if(geofencingEvent == null){
+            Log.e(TAG, "Geofencing: event is null")
+            return
+        } else if (geofencingEvent.hasError()) {
             Log.e(TAG, "Geofencing error: ${geofencingEvent.errorCode}")
             return
         }
