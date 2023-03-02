@@ -257,9 +257,9 @@ class GeofencingPlugin : ActivityAware, FlutterPlugin, MethodCallHandler {
   }
 
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    mContext = binding.getApplicationContext()
+    mContext = binding.applicationContext
     mGeofencingClient = LocationServices.getGeofencingClient(mContext!!)
-    val channel = MethodChannel(binding.getBinaryMessenger(), "plugins.flutter.io/geofencing_plugin")
+    val channel = MethodChannel(binding.binaryMessenger, "plugins.flutter.io/geofencing_plugin")
     channel.setMethodCallHandler(this)
   }
 
