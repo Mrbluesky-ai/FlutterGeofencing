@@ -148,7 +148,7 @@ class GeofencingService : MethodCallHandler, JobIntentService() {
             it.requestId
         }
 
-        val location = geofencingEvent.triggeringLocation
+        val location = geofencingEvent.triggeringLocation ?: return
         val locationList = listOf(location.latitude,
                 location.longitude)
         val geofenceUpdateList = listOf(callbackHandle,
